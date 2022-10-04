@@ -13,34 +13,40 @@ steps:
   inputs:
     versionSpec: '3.5'
 
-- task: configuredatabricks@0
-  displayName: 'Configure Databricks CLI'
-  inputs:
-    url: $(databricks_host)
-    token: $(databricks_token)
+# Thie pipeline for Databricks should be replaced by the ADF ones here
+# https://github.com/dna-ey-fso/azure-mdw-adf-demo/tree/main/e2e_samples/parking_sensors/devops
+# We can implement the CI part as Azure pipelines and keep the CD for release pipelines
+# This pipeline will create an artifact in Azure Artifacts (CI)
+# The output artifact will be consumed by an Azure Release Pipeline (CD)
 
-- task: deploynotebooks@0
-  displayName: 'Publish notebooks to test workspace'
-  inputs:
-    notebooksFolderPath: $(notebook_folder_path)
-    workspaceFolder: $(workspace_folder)
+# - task: configuredatabricks@0
+#   displayName: 'Configure Databricks CLI'
+#   inputs:
+#     url: $(databricks_host)
+#     token: $(databricks_token)
 
-- script: |
-    pip install nutter
-  displayName: 'Install Nutter'
+# - task: deploynotebooks@0
+#   displayName: 'Publish notebooks to test workspace'
+#   inputs:
+#     notebooksFolderPath: $(notebook_folder_path)
+#     workspaceFolder: $(workspace_folder)
 
-- script: |
-    nutter run $SEARCHFOLDER $CLUSTER --recursive --junit_report
-  displayName: 'Execute Nutter'
-  env:
-      SEARCHFOLDER: $(test_search_folder)
-      CLUSTER: $(clusterID)
-      DATABRICKS_HOST: $(databricks_host)
-      DATABRICKS_TOKEN: $(databricks_token)
+# - script: |
+#     pip install nutter
+#   displayName: 'Install Nutter'
 
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/test-*.xml'
-    testRunTitle: 'Publish Nutter results'
-  condition: succeededOrFailed()
+# - script: |
+#     nutter run $SEARCHFOLDER $CLUSTER --recursive --junit_report
+#   displayName: 'Execute Nutter'
+#   env:
+#       SEARCHFOLDER: $(test_search_folder)
+#       CLUSTER: $(clusterID)
+#       DATABRICKS_HOST: $(databricks_host)
+#       DATABRICKS_TOKEN: $(databricks_token)
+
+# - task: PublishTestResults@2
+#   inputs:
+#     testResultsFormat: 'JUnit'
+#     testResultsFiles: '**/test-*.xml'
+#     testRunTitle: 'Publish Nutter results'
+#   condition: succeededOrFailed()
